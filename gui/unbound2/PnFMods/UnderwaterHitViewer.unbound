@@ -1,0 +1,79 @@
+(def constant UHV_PARAMETER_KEY 'modUnderwaterHitViewer')
+
+(def css $UHV_TextStyle()
+	(extends $TextDefaultNM)
+	(extends $FontEnableReadability)
+	(filters 
+		(dropShadow 
+			(distance = 1)
+			(angle = 90)
+			(color = 0x08222a)
+			(alpha = 0.5)
+			(blurX = 2.0)
+			(blurY = 2.0)
+			(strength = 1.0)
+			(quality = 2)
+		)
+	)
+)
+
+(def element UHV_UnderwaterHitViewer() layout=true
+	(scope
+		(macro STAGE_SIZE)
+
+		(var uwHitsWatcher:gfx = "$datahub.getPrimWatcher(CC.parameter, '0_' + UHV_PARAMETER_KEY)")
+		(var uwHitsEntity:gfx = "uwHitsWatcher.entity" (event "uwHitsWatcher.event"))
+
+		(var dataComponent:gfx = "uwHitsEntity && uwHitsEntity.hasComponent(CC.dataComponent) ? uwHitsEntity.dataComponent : null" (event "uwHitsEntity.evAdded"))
+		(var uwHitsEntityIds:array = "dataComponent ? dataComponent.data.underwaterHitEntityIds : null" (event "dataComponent.evDataChanged"))
+	)
+
+	(bind visible "isIntuitionsActive")
+
+	(style
+		(bind width "stageWidth")
+		(bind height "stageHeight")
+		(hitTest = false)
+	)
+
+	(block
+		(style
+			(position = "absolute")
+			(bind left "stageWidth * 2 / 3")
+			(bind top "stageHeight / 2 + 2")
+			(vgap = 5px)
+		)
+		(controller $Repeat renderer='UHV_UnderwaterHItItem'
+			(bind count "uwHitsEntityIds ? uwHitsEntityIds.length : 0")
+			(args
+				_entityId="uwHitsEntityIds[$index]"
+			)
+		)
+	)
+)
+
+(def element UHV_UnderwaterHItItem(_entityId:number)
+	(scope
+		#(var timer:gfx = "$datahub.getSingleComponent(CC.timer)")
+
+		(var entity:gfx = "$datahub.getEntity(_entityId)")
+		(var dataComponent:gfx = "entity ? entity.dataComponent : null" (event "entity.evAdded"))
+		(var data:dict = "dataComponent ? dataComponent.data : null")
+
+		(var isIncoming:bool = "data ? data.isIncomingDamage : false")
+		(var damage:number = "data ? data.damage : 0")
+		#(var createdAt:number = "data ? data.createdAt : 0")
+
+		#(var timePassed:number = "timer.currentTime - createdAt" (event "timer.evFrequent"))
+	)
+	(style
+		(flow = "Flow.HORIZONTAL")
+	)
+	(tf
+		(class $UHV_TextStyle)
+		(style
+			(bind textColor "isIncoming ? C_ENEMY : 0xEEEEEE")
+		)
+		(bind text "'Underwater: ' + (isIncoming ? '-' : '+') + damage")
+	)
+)

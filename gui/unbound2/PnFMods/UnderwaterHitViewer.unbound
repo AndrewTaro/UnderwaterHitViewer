@@ -1,4 +1,4 @@
-(def constant UHV_PARAMETER_KEY 'modUnderwaterHitViewer')
+(def constant UHV_COMPONENT_KEY 'modUnderwaterHitViewer')
 
 (def css $UHV_TextStyle()
 	(extends $TextDefaultNM)
@@ -21,14 +21,12 @@
 	(scope
 		(macro STAGE_SIZE)
 
-		(var uwHitsWatcher:gfx = "$datahub.getPrimWatcher(CC.parameter, '0_' + UHV_PARAMETER_KEY)")
+		(var uwHitsWatcher:gfx = "$datahub.getPrimWatcher(CC.mod_DataComponent, UHV_COMPONENT_KEY)")
 		(var uwHitsEntity:gfx = "uwHitsWatcher.entity" (event "uwHitsWatcher.event"))
 
-		(var dataComponent:gfx = "uwHitsEntity && uwHitsEntity.hasComponent(CC.dataComponent) ? uwHitsEntity.dataComponent : null" (event "uwHitsEntity.evAdded"))
+		(var dataComponent:gfx = "uwHitsEntity ? uwHitsEntity.mod_DataComponent : null" (event "uwHitsEntity.evAdded"))
 		(var uwHitsEntityIds:array = "dataComponent ? dataComponent.data.underwaterHitEntityIds : null" (event "dataComponent.evDataChanged"))
 	)
-
-	(bind visible "isIntuitionsActive")
 
 	(style
 		(bind width "stageWidth")

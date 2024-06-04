@@ -6,7 +6,7 @@ try:
 except:
     pass
 
-PARAMETER_ID = 'modUnderwaterHitViewer'
+COMPONENT_KEY = 'modUnderwaterHitViewer'
 DISPLAY_TIME = 5.0
 
 class UnderwaterHitViewer(object):
@@ -59,19 +59,18 @@ class UnderwaterHitsManager(object):
         entity.kill()
 
     def updateEntityList(self):
-        ui.updateUiElementData(self.parameterEntityId, {'data': {'underwaterHitEntityIds': [i.entityId for i in self._entities]}})
+        ui.updateUiElementData(self.managerEntityId, {'underwaterHitEntityIds': [i.entityId for i in self._entities]})
 
     def init(self, *args):
-        self.parameterEntityId = ui.createUiElement()
-        ui.addDataComponent(self.parameterEntityId, {'data': {'underwaterHitEntityIds': []}})
-        ui.addParameterComponent(self.parameterEntityId, PARAMETER_ID)
+        self.managerEntityId = ui.createUiElement()
+        ui.addDataComponentWithId(self.managerEntityId, COMPONENT_KEY, {'underwaterHitEntityIds': []})
 
     def kill(self, *args):
         for entity in self._entities:
             callbacks.cancel(entity.callback)
             entity.kill()
         self._entities = []
-        ui.deleteUiElement(self.parameterEntityId)
+        ui.deleteUiElement(self.managerEntityId)
 
     
 class UnderwaterHit(object):
@@ -79,7 +78,7 @@ class UnderwaterHit(object):
         self.callback = None
 
         self.entityId = ui.createUiElement()
-        ui.addDataComponent(self.entityId, {'data': hitData})
+        ui.addDataComponent(self.entityId, hitData)
 
     def kill(self, *args):
         self.callback = None

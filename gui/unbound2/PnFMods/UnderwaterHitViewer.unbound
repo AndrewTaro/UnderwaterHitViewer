@@ -21,10 +21,10 @@
 	(scope
 		(macro STAGE_SIZE)
 
-		(var uwHitsWatcher:gfx = "$datahub.getPrimWatcher(CC.mod_DataComponent, UHV_COMPONENT_KEY)")
+		(var uwHitsWatcher:gfx = "$datahub.getPrimWatcher(CC.mods_DataComponent, UHV_COMPONENT_KEY)")
 		(var uwHitsEntity:gfx = "uwHitsWatcher.entity" (event "uwHitsWatcher.event"))
 
-		(var dataComponent:gfx = "uwHitsEntity ? uwHitsEntity.mod_DataComponent : null" (event "uwHitsEntity.evAdded"))
+		(var dataComponent:gfx = "uwHitsEntity ? uwHitsEntity.mods_DataComponent : null" (event "uwHitsEntity.evAdded"))
 		(var uwHitsEntityIds:array = "dataComponent ? dataComponent.data.underwaterHitEntityIds : null" (event "dataComponent.evDataChanged"))
 	)
 

@@ -41,7 +41,7 @@
 			(bind top "stageHeight / 2 + 2")
 			(vgap = 5px)
 		)
-		(controller $Repeat renderer='UHV_UnderwaterHItItem'
+		(controller $Repeat renderer='UHV_UnderwaterHitItem'
 			(bind count "uwHitsEntityIds ? uwHitsEntityIds.length : 0")
 			(args
 				_entityId="uwHitsEntityIds[$index]"
@@ -50,19 +50,14 @@
 	)
 )
 
-(def element UHV_UnderwaterHItItem(_entityId:number)
+(def element UHV_UnderwaterHitItem(_entityId:number)
 	(scope
-		#(var timer:gfx = "$datahub.getSingleComponent(CC.timer)")
-
 		(var entity:gfx = "$datahub.getEntity(_entityId)")
-		(var dataComponent:gfx = "entity ? entity.dataComponent : null" (event "entity.evAdded"))
+		(var dataComponent:gfx = "entity ? entity.mods_DataComponent : null" (event "entity.evAdded"))
 		(var data:dict = "dataComponent ? dataComponent.data : null")
 
 		(var isIncoming:bool = "data ? data.isIncomingDamage : false")
 		(var damage:number = "data ? data.damage : 0")
-		#(var createdAt:number = "data ? data.createdAt : 0")
-
-		#(var timePassed:number = "timer.currentTime - createdAt" (event "timer.evFrequent"))
 	)
 	(style
 		(flow = "Flow.HORIZONTAL")

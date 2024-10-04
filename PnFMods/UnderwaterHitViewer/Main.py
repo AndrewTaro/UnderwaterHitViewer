@@ -22,8 +22,12 @@ class UnderwaterHitViewer(object):
         self.manager.init()
 
     def onBattleQuit(self, *args):
-        self._underwaterHits.clear()
-        self.manager.kill()
+        # onBattleQuit gets triggered when the client is shutting down without a battle
+        try:
+            self._underwaterHits.clear()
+            self.manager.kill()
+        except:
+            pass
 
     def onReceiveShellInfo(self, victimId, shooterId, ammoId, matId, shotId, hitType, damage, shotPosition, yaw, hlinfo):
         isUnderwater = hitType & 4
